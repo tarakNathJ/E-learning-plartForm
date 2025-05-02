@@ -27,6 +27,22 @@ const PaymentSchema = new Schema({
         required:true,
         trim:true
     },
+    RazorpayOrderID:{
+        type: String,
+        required:true,
+        trim:true
+    },
+    RazorpayPaymentID:{
+        type: String,
+        required:true,
+        trim:true
+    },
+    RazorpaySignature:{
+        type: String,
+        required:true,
+        trim:true
+    }
+    
 },{
     timestamps: true
 });
@@ -34,3 +50,4 @@ const PaymentSchema = new Schema({
 PaymentSchema.plugin(mongooseAggregatePaginate)
 // export module
 export const Payment = mongoose.model('Payment', PaymentSchema);
+

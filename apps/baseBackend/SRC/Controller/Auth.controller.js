@@ -2,6 +2,7 @@ import {ApiError} from '../Utils/ApiError.js';
 import {User} from '../Modules/User.module.js'
 import {ApiResponce }from '../Utils/ApiResponce.js';
 import {asyncHandler} from '../Utils/RequestHandler.js';
+import {profile} from '../Modules/Profile.module.js';
 
 
 export const registerController = asyncHandler(async (req, res) => {
@@ -212,6 +213,143 @@ export const unblockUserController = asyncHandler(async (req, res) => {
     )
 })
 
+export const CreatePersonalDetailsController = asyncHandler(async (req, res) => {
+    const {UserId , firstName, lastName, ifcs_Code, panCardID, aadharCardID, address, city, state, country, pinCode, phoneNumber} = req.body;
+    // get user details from frontend
+    // validation - not empty
+    // check if user already exists: username, email
+    if(
+        [UserId, firstName, lastName, ifcs_Code, panCardID, aadharCardID, address, city, state, country, pinCode, phoneNumber].some((field) => field?.trim() === "")
+    ) {
+        throw new ApiError(400,"All fields are required")
+    }
+    // check if user exists in db
+    const user = await User.findById(UserId);
+    if(!user) {
+        throw new ApiError(400,"User with this id does not exists")
+    }
+    // check if profile already exists
+    const profile = await profile.findOne({UserId: UserId});
+    if(profile) {
+        throw new ApiError(400,"Profile already exists")
+    }
+    // create profile object - create entry in db
+    const newProfile = await profile.create({
+        UserId,
+        firstName,
+        lastName,
+        ifcs_Code,
+        panCardID,
+        aadharCardID,
+        address,
+        city,
+        state,
+        country,
+        pinCode,
+        phoneNumber
+    });
+    // check for profile creation
+    if(!newProfile) {
+        throw new ApiError(500,"Something went wrong while creating the profile")
+    }
+
+    return res.status(201).json(
+        new ApiResponce(200,newProfile,"Profile created Successfully")
+    )   
+}
+)
+export const UpdateProfileController = asyncHandler(async (req, res) => {
+    const {UserId , firstName, lastName, ifcs_Code, panCardID, aadharCardID, address, city, state, country, pinCode, phoneNumber} = req.body;
+    // get user details from frontend
+    // validation - not empty
+    // check if user already exists: username, email
+    if(
+        [UserId, firstName, lastName, ifcs_Code, panCardID, aadharCardID, address, city, state, country, pinCode, phoneNumber].some((field) => field?.trim() === "")
+    ) {
+        throw new ApiError(400,"All fields are required")
+    }
+    // check if user exists in db
+    const user = await User.findById(UserId);
+    if(!user) {
+        throw new ApiError(400,"User with this id does not exists")
+    }
+    // check if profile already exists
+    const profile = await profile.findOne({UserId: UserId});
+    if(!profile) {
+        throw new ApiError(400,"Profile does not exists")
+    }
+    // update profile object - create entry in db
+    const updatedProfile = await profile.findByIdAndUpdate(profile._id,{
+        firstName,
+        lastName,
+        ifcs_Code,
+        panCardID,
+        aadharCardID,
+        address,
+        city,
+        state,
+        country,
+        pinCode,
+        phoneNumber
+    },{new: true});
+    // check for profile creation
+    if(!updatedProfile) {
+        throw new ApiError(500,"Something went wrong while creating the profile")
+    }
+
+    return res.status(201).json(
+        new ApiResponce(200,newProfile,"Profile created Successfully")
+    )   
+}
+)
+export const getProfileController = asyncHandler(async (req, res) => {
+    const {UserId} = req.params;
+    // check if user exists in db
+    const user = await User.findById(UserId);
+    if(!user) {
+        throw new ApiError(400,"User with this id does not exists")
+    }
+    // check if profile already exists
+    const profile = await profile.findOne({UserId: UserId});
+    if(!profile) {
+        throw new ApiError(400,"Profile does not exists")
+    }
+    // return res
+    return res.status(200).json(
+        new ApiResponce(200,profile,"Profile fetched successfully") 
+    )
+})
+export const getAllProfileController = asyncHandler(async (req, res) => {
+    // get all users from db
+    const profiles = await profile.find();
+    // check for user creation
+    if(!profiles) {
+        throw new ApiError(500,"Something went wrong while getting the users")
+    }
+    // return res
+    return res.status(200).json(
+        new ApiResponce(200,profiles,"All users fetched successfully") 
+    )
+})
+export const deleteProfileController = asyncHandler(async (req, res) => {
+    const {UserId} = req.params;
+    // check if user exists in db
+    const user = await User.findById(UserId);
+    if(!user) {
+        throw new ApiError(400,"User with this id does not exists")
+    }
+    // check if profile already exists
+    const profile = await profile.findOne({UserId: UserId});
+    if(!profile) {
+        throw new ApiError(400,"Profile does not exists")
+    }
+    // delete user
+    await profile.findByIdAndDelete(profile._id);
+    // return res
+    return res.status(200).json(
+        new ApiResponce(200,null,"Profile deleted successfully") 
+    )
+})
 
 
 

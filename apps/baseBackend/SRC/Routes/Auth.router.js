@@ -9,7 +9,12 @@ import {
     getAllUsersController,
     getSingleUserController,
     blockUserController,
-    unblockUserController
+    unblockUserController,
+    CreatePersonalDetailsController,
+    UpdateProfileController,
+    getProfileController,
+    getAllProfileController,
+    deleteProfileController 
 } from '../Controller/Auth.controller.js';
 
 
@@ -25,5 +30,10 @@ router.route('/all-users').get(getAllUsersController);
 router.route('/single-user/:id').get(getSingleUserController);
 router.route('/block-user/:id').put(blockUserController);
 router.route('/unblock-user/:id').put(unblockUserController);
+router.route('/CreateUserProfile').post(CreatePersonalDetailsController);
+router.route('/UpdateUserProfile').post(UpdateProfileController);
+router.route('/getUserProfile').get(getProfileController);
+router.route('/getAllProfile').get(getAllProfileController);
+router.route('/deleteUserProfile').delete(deleteProfileController);
 
 export default router;

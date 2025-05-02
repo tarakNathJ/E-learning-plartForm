@@ -25,10 +25,7 @@ const PurchaseCourseSchema = new Schema({
         enum: ['Pending', 'Completed', 'Failed'],
         default: 'Pending'
     },
-    expiryDate:{
-        type: Date,
-        required: true
-    },
+    
 },{
     timestamps: true   
 });

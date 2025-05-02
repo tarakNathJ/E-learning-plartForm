@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import  authRouter from './Routes/Auth.router.js';
 import  courseRoute from './Routes/All.course.details.route.js'
+import PaymentRouter from './Routes/RazorPay.router.js'
 
 
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.json());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/course', courseRoute);
+app.use('/api/v1/Payment',PaymentRouter);
 
 
 app.use(express.static('public'))

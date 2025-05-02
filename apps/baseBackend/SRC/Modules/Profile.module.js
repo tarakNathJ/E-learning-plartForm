@@ -2,9 +2,6 @@ import   mongoose, {Schema } from 'mongoose'
 import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 
-
-
-
 const ProfileSchema = new Schema({
     userID: {
         type: Schema.Types.ObjectId,

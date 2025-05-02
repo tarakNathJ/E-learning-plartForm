@@ -1,0 +1,1 @@
+export const  DB_Folder_Name = "E-learning-platform";
